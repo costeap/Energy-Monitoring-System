@@ -1,0 +1,57 @@
+version: '3.8'
+services:
+  server:
+    container_name: backendcontainer
+    image: springimg
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgresdatabase
+  postgresdatabase:
+    container_name: postgrescontainer
+    image: library/postgres:alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=************
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=city-db
+
+#version: '3'
+#
+#services:
+#
+#  demo-db:
+#    image: containerregistrypaulacostea1.azurecr.io/db
+#
+#    healthcheck:
+#      test: ["CMD", "pg_isready", "-q", "-d", "postgres", "-U", "root"]
+#      timeout: 45s
+#      interval: 10s
+#      retries: 5
+#    restart: always
+#    environment:
+#      - POSTGRES_USER=postgres
+#      - POSTGRES_PASSWORD=Carambola23*
+#      - POSTGRES_DB=city-db
+#      - POSTGRES_HOST_AUTH_METHOD=trust
+#    ports:
+#      - "5432:5432"
+#    container_name: demo-db
+#
+#  demo-be:
+#    image: containerreigistrypaulacostea1.azurecr.io/costeapdscosteapaulaassignmentbackend
+#    restart: always
+#    ports:
+#      - "8080:8080"
+#    environment:
+#      #- DB_IP=172.22.0.2
+#      - DB_IP=demo-db
+#      - DB_PORT=5432
+#      - DB_USER=postgres
+#      - DB_PASSWORD=Carambola23*
+#      - DB_DBNAME=city-db
+#    depends_on:
+#      demo-db:
+#        condition: service_healthy

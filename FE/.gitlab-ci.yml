@@ -1,0 +1,32 @@
+stages:
+  - build
+  - deploy
+
+cache:
+  paths:
+    - node_modules/
+    
+variables:
+  CI: ""
+
+build:
+  stage: build
+  image: node:16.14.0
+  script:
+    - npm install --progress=false
+    - npm run build
+
+deploy:
+  stage: deploy
+  image: ruby:3.1
+  script:
+    - apt-get update -qy
+    - apt-get install -y ruby-dev
+    - gem install dpl
+    - dpl --provider=heroku --app=react-demo-sd2022-paula --api-key=$HEROKU_API_KEY 
+  environment:
+    name: staging
+    url: https://react-demo-sd2022-paula.herokuapp.com/
+  only:
+    - master
+

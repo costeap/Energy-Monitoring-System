@@ -1,0 +1,45 @@
+# Docker
+# Build and push an image to Azure Container Registry
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+trigger:
+- master
+
+resources:
+- repo: self
+
+variables:
+  # Container registry service connection established during pipeline creation
+  dockerRegistryServiceConnection: 'edac4a13-9f4f-43f4-aad2-e6c87bdb640e'
+  imageRepository: 'costeapdscosteapaulaassignmentbackend'
+  containerRegistry: 'containerregistrypaulacostea30641.azurecr.io'
+  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
+  tag: '$(Build.BuildId)'
+
+  # Agent VM image name
+  vmImageName: 'localDS'
+
+stages:
+- stage: Build
+  displayName: Build stage
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      name: localDS
+    steps:
+    - task: Docker@2
+      displayName: Build and push an image to container registry
+      inputs:
+        command: buildAndPush
+        repository: $(imageRepository)
+        dockerfile: $(dockerfilePath)
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags:  |
+          latest
+          $(Build.BuildId)
+    - task: CopyFiles@2
+      inputs:
+        SourceFolder: ''
+        Contents: 'docker-compose.yml'
+        TargetFolder: '$(Agent.WorkFolder)'

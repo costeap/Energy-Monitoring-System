@@ -1,0 +1,20 @@
+syntax = "proto3";
+import "google/protobuf/timestamp.proto";
+option java_multiple_files = true;
+option java_package = "ro.tuc.ds2020";
+
+service ChatService {
+  rpc SendMessage (MessageRequest) returns (MessageResponse);
+}
+
+message MessageResponse {
+  string messageSender = 1;
+  string textMessage = 2;
+  string messageReceiver = 3;
+}
+
+message MessageRequest {
+  string messageSender = 1;
+  string textMessage = 2;
+  string messageReceiver = 3;
+}
